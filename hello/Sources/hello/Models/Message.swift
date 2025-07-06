@@ -6,9 +6,21 @@
 //  
 //
 
+import Fluent
 import Vapor
 
-struct Message: Content {
-    /// メッセージ
-    let message: String
+final class Message: Model, Content, @unchecked Sendable {
+    static let schema = "messages"
+
+    @ID(key: .id)
+    var id: UUID?
+
+    @Field(key: "text")
+    var text: String
+
+    init() {}
+
+    init(text: String) {
+        self.text = text
+    }
 }

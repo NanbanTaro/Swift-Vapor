@@ -1,10 +1,20 @@
+import Fluent
+import FluentSQLiteDriver
 import Vapor
 
-// configures your application
-public func configure(_ app: Application) async throws {
-    // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+public func configure(_ app: Application) throws {
+    // SQLite設定
+    // プロジェクトルートのパスを取得
+    let rootDirectory = DirectoryConfiguration.detect().workingDirectory
+    let dbPath = "\(rootDirectory)db.sqlite"
+    app.databases.use(.sqlite(.file(dbPath)), as: .sqlite)
 
-    // register routes
+    // マイグレーション登録
+    app.migrations.add(CreateMessage())
+
+    // マイグレーション自動実行
+//    try app.autoMigrate().wait()
+
+    // ルーティング
     try routes(app)
 }
